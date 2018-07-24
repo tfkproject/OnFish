@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_payment"
+            android:icon="@drawable/ic_monetization"
+            android:title="Transaksi" />
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_map_black"
+            android:title="Sekitaran" />
+        <!--<item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Slideshow" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />
+            -->
+    </group>
+
+    <item android:title="Panel">
+        <menu>
+            <!--
+            <item
+                android:id="@+id/nav_admin"
+                android:icon="@drawable/ic_admin"
+                android:title="Login Admin" />
+            -->
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_about"
+                android:title="Tentang" />
+        </menu>
+    </item>
+
+</menu>
