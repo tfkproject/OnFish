@@ -18,7 +18,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "app.tfkproject.onfish"
+        applicationId "ta.pratiwi.onfish"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
