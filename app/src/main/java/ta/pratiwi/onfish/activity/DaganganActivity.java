@@ -243,14 +243,21 @@ public class DaganganActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length() != 0 || Integer.valueOf(text_jum_kg.getText().toString()) <= Integer.valueOf(sisa_kg) || text_jum_kg.getText().length() < 0 ){
+                if(charSequence.length() != 0 || text_jum_kg.getText().length() < 0  ){
 
                     jum_kg = Integer.valueOf(charSequence.toString());
                     harga_total = jum_kg * harga_per_kg;
                     txt_harga_total.setText("Rp. "+harga_total);
+
+                    if(Integer.valueOf(text_jum_kg.getText().toString()) <= Integer.valueOf(sisa_kg)){
+
+                    }else {
+                        text_jum_kg.setText(sisa_kg+"");
+                        Toast.makeText(DaganganActivity.this, "Order tidak boleh melebihi dari batas ketersediaan", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else{
-                    Toast.makeText(DaganganActivity.this, "Minimal pesanan adalah 1 Kg dan tidak melebihi dari batas ketersediaan", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DaganganActivity.this, "Minimal pesanan adalah 1 Kg", Toast.LENGTH_SHORT).show();
                 }
             }
 
