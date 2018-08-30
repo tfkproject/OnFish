@@ -213,7 +213,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length() != 0 || text_jum_kg.getText().length() <= Integer.valueOf(sisa_kg) ){
+                if(charSequence.length() != 0 || Integer.valueOf(text_jum_kg.getText().toString()) <= Integer.valueOf(sisa_kg) || text_jum_kg.getText().length() < 0  ){
 
                     jum_kg = Integer.valueOf(charSequence.toString());
                     harga_total = jum_kg * harga_per_kg;
