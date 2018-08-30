@@ -43,6 +43,7 @@ public class KeranjangActivity extends AppCompatActivity {
     public String SERVER = Config.URL+"lihat_keranjang.php";
     public String SERVER_REMOVE = Config.URL+"hapus_dari_keranjang.php";
     public String SERVER_SUM = Config.URL+"sum_keranjang.php";
+    public String SERVER_POST_SET = Config.URL+"set_ketersediaan.php";
 
     SessionManager session;
 
@@ -76,9 +77,13 @@ public class KeranjangActivity extends AppCompatActivity {
         itemList = new ArrayList<>();
         adapter = new KeranjangAdapter(getApplicationContext(), itemList, new KeranjangAdapter.CardAdapterListener() {
             @Override
-            public void onButtonSelected(int position, TextView id_record, TextView nama_ikan, TextView nama_petani) {
+            public void onButtonSelected(int position, TextView id_record, TextView nama_ikan, TextView nama_petani, String id_dgn, String berat_tersedia, String jum_kg) {
                 //delete item keranjang
                 String id_rc = id_record.getText().toString();
+
+                //jumlah ketersediaan bertambah
+                int sisa = Integer.valueOf(berat_tersedia) + Integer.valueOf(jum_kg);
+                new setJumKetersediaan(id_dgn, String.valueOf(sisa)).execute();
 
                 new removeData(id_rc).execute();
             }
@@ -230,11 +235,12 @@ public class KeranjangActivity extends AppCompatActivity {
                             String id_item_beli = c.getString("id_item_beli");
                             id_keranjang = c.getString("id_keranjang");
                             String id_dagangan = c.getString("id_dagangan");
-                            String id_petani = c.getString("id_petani");
-                            String nama_petani = c.getString("nama_petani");
-                            String id_kategori_ikan = c.getString("id_kategori_ikan");
+                            String id_penjual = c.getString("id_penjual");
+                            String nama_penjual = c.getString("nama_penjual");
+                            String id_jenis_ikan = c.getString("id_jenis_ikan");
                             String nama_ikan = c.getString("nama_ikan");
                             String jum_kg = c.getString("jum_kg");
+                            String sisa_kg = c.getString("berat_tersedia");
                             String harga_total = c.getString("harga_total");
                             String foto = c.getString("foto");
 
@@ -242,11 +248,12 @@ public class KeranjangActivity extends AppCompatActivity {
                             p.setId_item_beli(id_item_beli);
                             //p.setId_keranjang(id_keranjang);
                             p.setId_dagangan(id_dagangan);
-                            p.setId_petani(id_petani);
-                            p.setNama_petani(nama_petani);
-                            p.setId_kategori_ikan(id_kategori_ikan);
+                            p.setId_petani(id_penjual);
+                            p.setNama_petani(nama_penjual);
+                            p.setId_kategori_ikan(id_jenis_ikan);
                             p.setNama_ikan(nama_ikan);
                             p.setJum_kg(jum_kg);
+                            p.setBerat_tersedia(sisa_kg);
                             p.setHarga_total(harga_total);
                             p.setLink_foto(foto);
 
@@ -276,6 +283,74 @@ public class KeranjangActivity extends AppCompatActivity {
             textId_keranjang.setText("ID Keranjang: "+id_keranjang);
             pDialog.dismiss();
 
+        }
+
+    }
+
+    private class setJumKetersediaan extends AsyncTask<Void,Void,String> {
+        private String id_dagangan;
+        private String jum_kg;
+
+        public setJumKetersediaan(String id_dagangan, String jum_kg){
+            this.id_dagangan = id_dagangan;
+            this.jum_kg = jum_kg;
+        }
+
+        private String scs = "";
+        private String psn = "";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            /*pDialog = new ProgressDialog(DaganganActivity.this);
+            pDialog.setMessage("Loading..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                //menganbil data-data yang akan dikirim
+
+                //generate hashMap to store encodedImage and the name
+                HashMap<String,String> detail = new HashMap<>();
+                detail.put("id_dagangan", id_dagangan);
+                detail.put("jum_kg", jum_kg);
+
+                try{
+                    //convert this HashMap to encodedUrl to send to php file
+                    String dataToSend = hashMapToUrl(detail);
+                    //make a Http request and send data to php file
+                    String response = Request.post(SERVER_POST_SET,dataToSend);
+
+                    //dapatkan respon
+                    Log.e("Respon", response);
+
+                    JSONObject ob = new JSONObject(response);
+                    scs = ob.getString("success");
+                    psn = ob.getString("message");
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                    Log.e(TAG, "ERROR  " + e);
+                    Toast.makeText(getApplicationContext(),"Maaf, terjadi error!",Toast.LENGTH_SHORT).show();
+                    //return null;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            //pDialog.dismiss();
         }
 
     }

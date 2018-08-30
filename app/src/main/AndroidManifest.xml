@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ta.pratiwi.onfish">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -28,15 +29,24 @@
         <activity android:name="ta.pratiwi.onfish.activity.DaganganActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.KeranjangActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.LoginActivity" />
+        <activity android:name="ta.pratiwi.onfish.activity.LoginPenjualActivity" />
+        <activity android:name="ta.pratiwi.onfish.activity.MainPenjualActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.BayarActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.KonfirmasiBayarActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.RegistrasiActivity" />
+        <activity android:name="ta.pratiwi.onfish.activity.RegistrasiPenjualActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.SearchActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.KonfirmasiBarangActivity"/>
         <activity android:name="ta.pratiwi.onfish.activity.CariSekitarActivity"/>
+        <activity android:name="ta.pratiwi.onfish.activity.TambahDaganganActivity"/>
+        <activity android:name="ta.pratiwi.onfish.activity.DirectionMap"/>
+
+        <!--<meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_maps_key" />-->
 
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
+            android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
     </application>
 

@@ -71,7 +71,7 @@ public class KeranjangAdapter extends RecyclerView.Adapter<KeranjangAdapter.MyVi
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Keranjang keranjangItem = itemList.get(position);
+        final Keranjang keranjangItem = itemList.get(position);
 
         holder.id_item_beli.setText(keranjangItem.getId_item_beli());
         holder.id_dagangan.setText(keranjangItem.getId_dagangan());
@@ -87,7 +87,15 @@ public class KeranjangAdapter extends RecyclerView.Adapter<KeranjangAdapter.MyVi
         holder.btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onButtonSelected(position, holder.id_item_beli, holder.ikan, holder.petani);
+                listener.onButtonSelected(
+                        position,
+                        holder.id_item_beli,
+                        holder.ikan,
+                        holder.petani,
+                        keranjangItem.getId_dagangan(),
+                        keranjangItem.getBerat_tersedia(),
+                        keranjangItem.getJum_kg()
+                );
             }
         });
 
@@ -99,6 +107,14 @@ public class KeranjangAdapter extends RecyclerView.Adapter<KeranjangAdapter.MyVi
     }
 
     public interface CardAdapterListener {
-        void onButtonSelected(int position, TextView id_record, TextView nama_ikan, TextView nama_petani);
+        void onButtonSelected(
+                int position,
+                TextView id_record,
+                TextView nama_ikan,
+                TextView nama_petani,
+                String id_dagangan,
+                String berat_tersedia,
+                String jum_kg
+        );
     }
 }

@@ -3,9 +3,8 @@ package ta.pratiwi.onfish.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,7 +32,7 @@ import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
 import ta.pratiwi.onfish.app.SessionManager;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginPenjualActivity extends AppCompatActivity {
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -43,18 +42,18 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
 
     private ProgressDialog pDialog;
-    public String SERVER = Config.URL+"login_pelanggan.php";
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    public String SERVER = Config.URL+"login_penjual.php";
+    private static final String TAG = LoginPenjualActivity.class.getSimpleName();
 
     SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login_penjual);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Login");
+        getSupportActionBar().setTitle("Login Penjual");
 
         session = new SessionManager(getApplicationContext());
 
@@ -88,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         txtReg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegistrasiActivity.class);
+                Intent intent = new Intent(LoginPenjualActivity.this, RegistrasiPenjualActivity.class);
                 startActivity(intent);
             }
         });
@@ -172,15 +171,15 @@ public class LoginActivity extends AppCompatActivity {
 
         private String scs = "";
         private String psn = "";
-        private String id_pelanggan = "";
-        private String nama_pelanggan = "";
-        private String email_pelanggan = "";
+        private String id_penjual = "";
+        private String nama_penjual = "";
+        private String email_penjual = "";
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(LoginActivity.this);
+            pDialog = new ProgressDialog(LoginPenjualActivity.this);
             pDialog.setMessage("Loading..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -208,9 +207,9 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject ob = new JSONObject(response);
                     scs = ob.getString("success");
                     psn = ob.getString("message");
-                    id_pelanggan = ob.getString("id_pelanggan");
-                    nama_pelanggan = ob.getString("nama_pelanggan");
-                    email_pelanggan = ob.getString("email");
+                    id_penjual = ob.getString("id_penjual");
+                    nama_penjual = ob.getString("nama_penjual");
+                    email_penjual = ob.getString("email");
 
                     password_match = ob.getString("password");
                     nomor_hp = ob.getString("nomor_hp");
@@ -242,20 +241,20 @@ public class LoginActivity extends AppCompatActivity {
                 if(password_match.contains(password)){
                     //password match!
                     //- user berhasil login
-                    psn = "Selamat datang "+nama_pelanggan;
+                    psn = "Selamat datang "+nama_penjual;
 
                     //buat sesi login
-                    session.createLoginSession(id_pelanggan, nama_pelanggan, email_pelanggan, nomor_hp, alamat, "pelanggan");
+                    session.createLoginSession(id_penjual, nama_penjual, email_penjual, nomor_hp, alamat, "penjual");
 
                     Toast.makeText(getApplicationContext(), psn,Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    //terus tutup activity ini
+                    finish();
+
+                    Intent intent = new Intent(LoginPenjualActivity.this, MainPenjualActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
-
-                    //terus tutup activity ini
-                    finish();
                 }
                 else{
                     //password tidak match!
@@ -292,14 +291,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -311,10 +302,6 @@ public class LoginActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             finish();
             return true;
-        }
-        if (id == R.id.act_login_penjual){
-            Intent intent = new Intent(LoginActivity.this, LoginPenjualActivity.class);
-            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

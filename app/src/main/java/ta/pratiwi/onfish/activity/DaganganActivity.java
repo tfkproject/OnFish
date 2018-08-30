@@ -53,6 +53,7 @@ public class DaganganActivity extends AppCompatActivity {
 
     public String SERVER = Config.URL+"dagangan.php";
     public String SERVER_POST = Config.URL+"tambah_ke_keranjang.php";
+    public String SERVER_POST_SET = Config.URL+"set_ketersediaan.php";
 
     SessionManager session;
 
@@ -61,10 +62,9 @@ public class DaganganActivity extends AppCompatActivity {
     ImageView img;
     TextView txt_desk;
     EditText text_jum_kg;
-    TextView txt_harga_total;
+    TextView txt_harga_total, txt_jum_tersedia;
     Button btn_tambah_ke_keranjang;
-    ImageButton btn_telp;
-    TextView txt_telp;
+    ImageButton btn_telp, btn_direk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,20 @@ public class DaganganActivity extends AppCompatActivity {
         itemList = new ArrayList<>();
         adapter = new DaganganAdapter(getApplicationContext(), itemList, new DaganganAdapter.CardAdapterListener() {
             @Override
-            public void onButtonSelected(int position, TextView id_dagangan, TextView nama_ikan, TextView nama_petani, int harga_per_kg, String img_url, String deskripsi, String kontak) {
+            public void onButtonSelected(
+                    int position,
+                    String nama_penjual,
+                    TextView id_dagangan,
+                    TextView nama_ikan,
+                    TextView nama_petani,
+                    int harga_per_kg,
+                    String img_url,
+                    String deskripsi,
+                    String kontak,
+                    String sisa_kg,
+                    String lat,
+                    String lon
+            ) {
                 //kalau belum login
                 if(!session.isLoggedIn()){
                     Toast.makeText(DaganganActivity.this, "Anda harus login untuk dapat melakukan transaksi!", Toast.LENGTH_SHORT).show();
@@ -94,7 +107,7 @@ public class DaganganActivity extends AppCompatActivity {
                     String id_dgn = id_dagangan.getText().toString();
 
                     //munculkan dialog box, mau beli berapa Kg
-                    formBerapaKg(id_dgn, id_pelanggan, harga_per_kg, img_url, deskripsi, kontak);
+                    formBerapaKg(id_dgn, nama_penjual, id_pelanggan, harga_per_kg, img_url, deskripsi, kontak, sisa_kg, lat, lon);
                 }
             }
         });
@@ -107,11 +120,177 @@ public class DaganganActivity extends AppCompatActivity {
         String id_kat_ikan = getIntent().getStringExtra("id_kat_ikan_key");
         String nama_ikan = getIntent().getStringExtra("nama_ikan_key");
 
-        getSupportActionBar().setTitle("Kategori");
+        getSupportActionBar().setTitle("Jenis Ikan");
         getSupportActionBar().setSubtitle(nama_ikan);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         new getData(id_kat_ikan).execute();
+    }
+
+    private void dialogBox(String pesan){
+        //ini munculkan dialog box keranjang belanja
+        AlertDialog.Builder builder = new AlertDialog.Builder(DaganganActivity.this);
+        builder.setTitle("Lihat keranjang anda?");
+        builder.setMessage(pesan);
+        builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //masuk ke keranjang belanja
+                Intent intent = new Intent(DaganganActivity.this, KeranjangActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton("Nanti", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.setCancelable(false);
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+    int jum_kg;
+    int harga_total;
+
+    private void formBerapaKg(
+            final String id_dagangan,
+            final String nama_penjual,
+            final String id_pelanggan,
+            final int harga_per_kg,
+            String img_url,
+            String deskripsi,
+            final String kontak,
+            final String sisa_kg,
+            final String lat,
+            final String lon
+            ){
+        //panggil layout
+        final Dialog dialog = new Dialog(DaganganActivity.this);
+        dialog.setContentView(R.layout.dialog_req_jum_kg);
+        dialog.setTitle("Jumlah Pesanan");
+
+        //set komponen layout
+        img = (ImageView) dialog.findViewById(R.id.img_ikan);
+        txt_desk = (TextView) dialog.findViewById(R.id.txt_desk);
+        text_jum_kg = (EditText) dialog.findViewById(R.id.edit_jum_kg);
+        txt_harga_total = (TextView) dialog.findViewById(R.id.txt_harga_total);
+        btn_tambah_ke_keranjang = (Button) dialog.findViewById(R.id.btn_tambah_ke_keranjang);
+        btn_telp = (ImageButton) dialog.findViewById(R.id.btn_telp);
+        btn_direk = (ImageButton) dialog.findViewById(R.id.btn_direk);
+        txt_jum_tersedia = (TextView) dialog.findViewById(R.id.txt_jum_tersedia);
+
+        //default
+        Picasso.with(DaganganActivity.this).load(img_url).into(img);
+        txt_desk.setText(deskripsi);
+        text_jum_kg.setText("1");
+        btn_telp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ini munculkan dialog box keranjang belanja
+                AlertDialog.Builder builder = new AlertDialog.Builder(DaganganActivity.this);
+                builder.setTitle("Hubungi penyedia");
+                builder.setMessage("WhatsApp atau telpon?");
+                builder.setPositiveButton("WA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openWhatsappContact(kontak);
+                    }
+                });
+
+                builder.setNegativeButton("Telpon", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:"+kontak));
+                        startActivity(intent);
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.setCancelable(true);
+                alert.setCanceledOnTouchOutside(true);
+                alert.show();
+            }
+        });
+
+        btn_direk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DaganganActivity.this, DirectionMap.class);
+                intent.putExtra("key_nama_tujuan", nama_penjual);
+                intent.putExtra("key_lat_tujuan", lat);
+                intent.putExtra("key_long_tujuan", lon);
+                startActivity(intent);
+            }
+        });
+
+        jum_kg = Integer.valueOf(text_jum_kg.getText().toString());
+        harga_total = jum_kg * harga_per_kg;
+        txt_harga_total.setText("Rp. "+harga_total);
+
+
+        text_jum_kg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.length() != 0 || text_jum_kg.getText().length() <= Integer.valueOf(sisa_kg) ){
+
+                    jum_kg = Integer.valueOf(charSequence.toString());
+                    harga_total = jum_kg * harga_per_kg;
+                    txt_harga_total.setText("Rp. "+harga_total);
+                }
+                else{
+                    Toast.makeText(DaganganActivity.this, "Minimal pesanan adalah 1 Kg dan tidak melebihi dari batas ketersediaan", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        txt_jum_tersedia.setText(sisa_kg+" Kg");
+
+        btn_tambah_ke_keranjang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(text_jum_kg.getText().length() <= 0){
+                    Toast.makeText(DaganganActivity.this, "Minimal pesanan adalah 1 Kg", Toast.LENGTH_SHORT).show();
+                    text_jum_kg.setText("1");
+
+                }
+                else{
+                    String id_dgn = id_dagangan;
+                    String id_plg = id_pelanggan;
+                    String jml_kg = String.valueOf(jum_kg);
+                    String hrg_ttl = String.valueOf(harga_total);
+
+                    //jumlah ketersediaan berkurang
+                    int sisa = Integer.valueOf(sisa_kg) - jum_kg;
+                    new setJumKetersediaan(id_dgn, String.valueOf(sisa)).execute();
+
+                    //masukkan ke keranjang
+                    new postData(id_dgn, id_plg, jml_kg, hrg_ttl).execute();
+
+                    dialog.dismiss();
+                }
+            }
+        });
+
+
+        dialog.show();
+
     }
 
     private class postData extends AsyncTask<Void,Void,String> {
@@ -196,140 +375,71 @@ public class DaganganActivity extends AppCompatActivity {
 
     }
 
-    private void dialogBox(String pesan){
-        //ini munculkan dialog box keranjang belanja
-        AlertDialog.Builder builder = new AlertDialog.Builder(DaganganActivity.this);
-        builder.setTitle("Lihat keranjang anda?");
-        builder.setMessage(pesan);
-        builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //masuk ke keranjang belanja
-                Intent intent = new Intent(DaganganActivity.this, KeranjangActivity.class);
-                startActivity(intent);
-            }
-        });
+    private class setJumKetersediaan extends AsyncTask<Void,Void,String> {
+        private String id_dagangan;
+        private String jum_kg;
 
-        builder.setNegativeButton("Nanti", new DialogInterface.OnClickListener() {
+        public setJumKetersediaan(String id_dagangan, String jum_kg){
+            this.id_dagangan = id_dagangan;
+            this.jum_kg = jum_kg;
+        }
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.setCancelable(false);
-        alert.setCanceledOnTouchOutside(false);
-        alert.show();
-    }
+        private String scs = "";
+        private String psn = "";
 
-    int jum_kg;
-    int harga_total;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            /*pDialog = new ProgressDialog(DaganganActivity.this);
+            pDialog.setMessage("Loading..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();*/
+        }
 
-    private void formBerapaKg(final String id_dagangan, final String id_pelanggan, final int harga_per_kg, String img_url, String deskripsi, final String kontak){
-        //panggil layout
-        final Dialog dialog = new Dialog(DaganganActivity.this);
-        dialog.setContentView(R.layout.dialog_req_jum_kg);
-        dialog.setTitle("Jumlah Pesanan");
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                //menganbil data-data yang akan dikirim
 
-        //set komponen layout
-        img = (ImageView) dialog.findViewById(R.id.img_ikan);
-        txt_desk = (TextView) dialog.findViewById(R.id.txt_desk);
-        text_jum_kg = (EditText) dialog.findViewById(R.id.edit_jum_kg);
-        txt_harga_total = (TextView) dialog.findViewById(R.id.txt_harga_total);
-        btn_tambah_ke_keranjang = (Button) dialog.findViewById(R.id.btn_tambah_ke_keranjang);
-        btn_telp = (ImageButton) dialog.findViewById(R.id.btn_telp);
-        txt_telp = (TextView) dialog.findViewById(R.id.txt_telp);
+                //generate hashMap to store encodedImage and the name
+                HashMap<String,String> detail = new HashMap<>();
+                detail.put("id_dagangan", id_dagangan);
+                detail.put("jum_kg", jum_kg);
 
-        //default
-        Picasso.with(DaganganActivity.this).load(img_url).into(img);
-        txt_desk.setText(deskripsi);
-        text_jum_kg.setText("1");
-        txt_telp.setText(kontak);
-        btn_telp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //ini munculkan dialog box keranjang belanja
-                AlertDialog.Builder builder = new AlertDialog.Builder(DaganganActivity.this);
-                builder.setTitle("Hubungi penyedia");
-                builder.setMessage("WhatsApp atau telpon?");
-                builder.setPositiveButton("WA", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openWhatsappContact(kontak);
-                    }
-                });
+                try{
+                    //convert this HashMap to encodedUrl to send to php file
+                    String dataToSend = hashMapToUrl(detail);
+                    //make a Http request and send data to php file
+                    String response = Request.post(SERVER_POST_SET,dataToSend);
 
-                builder.setNegativeButton("Telpon", new DialogInterface.OnClickListener() {
+                    //dapatkan respon
+                    Log.e("Respon", response);
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_DIAL);
-                        intent.setData(Uri.parse("tel:"+kontak));
-                        startActivity(intent);
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.setCancelable(false);
-                alert.setCanceledOnTouchOutside(false);
-                alert.show();
-            }
-        });
+                    JSONObject ob = new JSONObject(response);
+                    scs = ob.getString("success");
+                    psn = ob.getString("message");
 
-        jum_kg = Integer.valueOf(text_jum_kg.getText().toString());
-        harga_total = jum_kg * harga_per_kg;
-        txt_harga_total.setText("Rp. "+harga_total);
-
-
-        text_jum_kg.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length() != 0 || text_jum_kg.getText().length() > 0 ){
-
-                    jum_kg = Integer.valueOf(charSequence.toString());
-                    harga_total = jum_kg * harga_per_kg;
-                    txt_harga_total.setText("Rp. "+harga_total);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                    Log.e(TAG, "ERROR  " + e);
+                    Toast.makeText(getApplicationContext(),"Maaf, terjadi error!",Toast.LENGTH_SHORT).show();
+                    //return null;
                 }
-                else{
-                    Toast.makeText(DaganganActivity.this, "Minimal pesanan adalah 1 Kg", Toast.LENGTH_SHORT).show();
-                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        btn_tambah_ke_keranjang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(text_jum_kg.getText().length() <= 0){
-                    Toast.makeText(DaganganActivity.this, "Minimal pesanan adalah 1 Kg", Toast.LENGTH_SHORT).show();
-                    text_jum_kg.setText("1");
-
-                }
-                else{
-                    //masukkan ke keranjang
-                    String id_dgn = id_dagangan;
-                    String id_plg = id_pelanggan;
-                    String jml_kg = String.valueOf(jum_kg);
-                    String hrg_ttl = String.valueOf(harga_total);
-
-                    new postData(id_dgn, id_plg, jml_kg, hrg_ttl).execute();
-                    dialog.dismiss();
-                }
-            }
-        });
+            return null;
+        }
 
 
-        dialog.show();
+
+        @Override
+        protected void onPostExecute(String s) {
+            //pDialog.dismiss();
+        }
 
     }
 
@@ -345,10 +455,10 @@ public class DaganganActivity extends AppCompatActivity {
 
         //variabel untuk tangkap data
         private int scs = 0;
-        private String id_kat_ikan;
+        private String id_jenis_ikan;
 
-        public getData(String id_kat_ikan){
-            this.id_kat_ikan = id_kat_ikan;
+        public getData(String id_jenis_ikan){
+            this.id_jenis_ikan = id_jenis_ikan;
         }
 
         @Override
@@ -365,7 +475,7 @@ public class DaganganActivity extends AppCompatActivity {
             try{
                 //susun parameter
                 HashMap<String,String> detail = new HashMap<>();
-                detail.put("id_kategori_ikan", id_kat_ikan);
+                detail.put("id_jenis_ikan", id_jenis_ikan);
 
                 try {
                     //convert this HashMap to encodedUrl to send to php file
@@ -387,25 +497,31 @@ public class DaganganActivity extends AppCompatActivity {
 
                             // Storing each json item in variable
                             String id_dagangan = c.getString("id_dagangan");
-                            String id_petani = c.getString("id_petani");
-                            String nama_petani = c.getString("nama_petani");
-                            String id_kategori_ikan = c.getString("id_kategori_ikan");
+                            String id_penjual = c.getString("id_penjual");
+                            String nama_penjual = c.getString("nama_penjual");
+                            String id_kategori_ikan = c.getString("id_jenis_ikan");
                             String nama_ikan = c.getString("nama_ikan");
                             String harga = c.getString("harga_per_kg");
+                            String berat_kg = c.getString("berat_tersedia");
                             String foto = c.getString("foto");
                             String deskripsi = c.getString("deskripsi");
-                            String kontak = c.getString("nohp");
+                            String no_hp = c.getString("no_hp");
+                            String lat = c.getString("lat");
+                            String lon = c.getString("lon");
 
                             Dagangan p = new Dagangan();
                             p.setId_dagangan(id_dagangan);
-                            p.setId_petani(id_petani);
-                            p.setNama_petani(nama_petani);
+                            p.setId_petani(id_penjual);
+                            p.setNama_penjual(nama_penjual);
                             p.setId_kategori_ikan(id_kategori_ikan);
                             p.setNama_ikan(nama_ikan);
+                            p.setBerat_tersedia(berat_kg);
                             p.setHarga_per_kg(harga);
                             p.setLink_foto(foto);
                             p.setDeskripsi(deskripsi);
-                            p.setNohp(kontak);
+                            p.setNohp(no_hp);
+                            p.setLat(lat);
+                            p.setLon(lon);
 
                             itemList.add(p);
 

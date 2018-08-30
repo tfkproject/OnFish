@@ -3,14 +3,19 @@ package ta.pratiwi.onfish.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,24 +30,27 @@ import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
 import ta.pratiwi.onfish.app.SessionManager;
 
-public class RegistrasiActivity extends AppCompatActivity {
+public class RegistrasiPenjualActivity extends AppCompatActivity {
 
-    TextView txtNama, txtEmail, txtPassword, txtNomor_hp,txtAlamat;
-    Button btnReg;
+    TextView txtNama, txtEmail, txtPassword, txtNomor_hp,txtAlamat, txtLokasi;
+    Button btnReg, btnLokasi;
     private ProgressDialog pDialog;
     SessionManager session;
 
-    public String SERVER_POST = Config.URL+"reg_pelangan.php";
+    public String SERVER_POST = Config.URL+"reg_penjual.php";
+    public String lat, lon;;
 
-    private static final String TAG = RegistrasiActivity.class.getSimpleName();
+    private static final String TAG = RegistrasiPenjualActivity.class.getSimpleName();
+
+    int PLACE_PICKER_REQUEST    =   1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registrasi);
+        setContentView(R.layout.activity_registrasi_penjual);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Registrasi");
+        getSupportActionBar().setTitle("Registrasi Penjual");
 
         session = new SessionManager(getApplicationContext());
 
@@ -53,11 +61,30 @@ public class RegistrasiActivity extends AppCompatActivity {
         txtAlamat = (TextView) findViewById(R.id.alamat);
         btnReg = (Button) findViewById(R.id.registrasi_button);
 
+        txtLokasi = (TextView) findViewById(R.id.txt_lokasi);
+
+        btnLokasi = (Button) findViewById(R.id.btn_lokasi);
+        btnLokasi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlacePicker.IntentBuilder builder   =   new PlacePicker.IntentBuilder();
+                Intent intent;
+                try {
+                    intent  =   builder.build(RegistrasiPenjualActivity.this);
+                    startActivityForResult(intent,PLACE_PICKER_REQUEST );
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(txtPassword.getText().length() < 6){
-                    Toast.makeText(RegistrasiActivity.this, "Password minimal 6 karakter!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistrasiPenjualActivity.this, "Password minimal 6 karakter!", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     //registrasikan user
@@ -67,11 +94,29 @@ public class RegistrasiActivity extends AppCompatActivity {
                     String nomor_hp = txtNomor_hp.getText().toString();
                     String alamat = txtAlamat.getText().toString();
 
-                    new postData(nama, email, password, nomor_hp, alamat).execute();
+                    new postData(nama, email, password, nomor_hp, alamat, lat, lon).execute();
                 }
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if( requestCode == PLACE_PICKER_REQUEST) {
+            if(resultCode == RESULT_OK)
+            {
+                Place place =   PlacePicker.getPlace(data, RegistrasiPenjualActivity.this);
+                Double latitude = place.getLatLng().latitude;
+                Double longitude = place.getLatLng().longitude;
+                lat = String.valueOf(latitude);
+                lon = String.valueOf(longitude);
+                String address = "Lat: "+String.valueOf(latitude)+"\nLon: "+String.valueOf(longitude);
+                txtLokasi.setText(address);
+            }
+        }
     }
 
     private class postData extends AsyncTask<Void,Void,String> {
@@ -80,24 +125,28 @@ public class RegistrasiActivity extends AppCompatActivity {
         private String password;
         private String nomor_hp;
         private String alamat;
+        private String lati;
+        private String longi;
 
-        public postData(String nama, String email, String password, String nomor_hp, String alamat){
+        public postData(String nama, String email, String password, String nomor_hp, String alamat, String lati, String longi){
             this.nama = nama;
             this.email = email;
             this.password = password;
             this.nomor_hp = nomor_hp;
             this.alamat = alamat;
+            this.lati = lati;
+            this.longi = longi;
         }
 
         private String scs = "";
         private String psn = "";
         private String nm = "";
-        private String id_pelanggan = "";
+        private String id_penjual = "";
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(RegistrasiActivity.this);
+            pDialog = new ProgressDialog(RegistrasiPenjualActivity.this);
             pDialog.setMessage("Loading..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -114,6 +163,8 @@ public class RegistrasiActivity extends AppCompatActivity {
                 detail.put("password", password);
                 detail.put("nomor_hp", nomor_hp);
                 detail.put("alamat", alamat);
+                detail.put("lat", lati);
+                detail.put("lon", longi);
 
                 try{
                     //convert this HashMap to encodedUrl to send to php file
@@ -128,7 +179,7 @@ public class RegistrasiActivity extends AppCompatActivity {
                     scs = ob.getString("success");
                     psn = ob.getString("message");
                     nm = ob.getString("nama");
-                    id_pelanggan = ob.getString("id_pelanggan");
+                    id_penjual = ob.getString("id_penjual");
 
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -151,17 +202,17 @@ public class RegistrasiActivity extends AppCompatActivity {
 
             if(scs.contains("1")){
                 //buat sesi login
-                session.createLoginSession(id_pelanggan, nama, email, nomor_hp, alamat, "pelanggan");
+                session.createLoginSession(id_penjual, nama, email, nomor_hp, alamat, "penjual");
 
                 Toast.makeText(getApplicationContext(), "Selamat datang "+nm,Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(RegistrasiActivity.this, MainActivity.class);
+                //terus tutup activity ini
+                finish();
+
+                Intent intent = new Intent(RegistrasiPenjualActivity.this, MainPenjualActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
-
-                //terus tutup activity ini
-                finish();
             }
             if(scs.contains("0")){
                 Toast.makeText(getApplicationContext(), psn,Toast.LENGTH_SHORT).show();

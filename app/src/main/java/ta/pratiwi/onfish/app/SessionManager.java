@@ -30,6 +30,7 @@ public class SessionManager {
     public static final String KEY_MAIL_PELANGGAN = "key_mail_pelanggan";
     public static final String KEY_NOHP_PELANGGAN = "key_nohp_pelanggan";
     public static final String KEY_ALAMAT_PELANGGAN = "key_alamat_pelanggan";
+    public static final String KEY_JENIS_LOGIN = "key_jenis_login";
 
     // Constructor
     public SessionManager(Context context) {
@@ -41,7 +42,7 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String id_pelanggan, String nama_pelanggan, String email_pelanggan, String nohp_pelanggan, String alamat_pelanggan) {
+    public void createLoginSession(String id_pelanggan, String nama_pelanggan, String email_pelanggan, String nohp_pelanggan, String alamat_pelanggan, String jenis_login) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_ID_PELANGGAN, id_pelanggan);
@@ -49,6 +50,7 @@ public class SessionManager {
         editor.putString(KEY_MAIL_PELANGGAN, email_pelanggan);
         editor.putString(KEY_NOHP_PELANGGAN, nohp_pelanggan);
         editor.putString(KEY_ALAMAT_PELANGGAN, alamat_pelanggan);
+        editor.putString(KEY_JENIS_LOGIN, jenis_login);
 
         // commit changes
         editor.commit();
@@ -94,6 +96,7 @@ public class SessionManager {
         user.put(KEY_MAIL_PELANGGAN, pref.getString(KEY_MAIL_PELANGGAN, null));
         user.put(KEY_NOHP_PELANGGAN, pref.getString(KEY_NOHP_PELANGGAN, null));
         user.put(KEY_ALAMAT_PELANGGAN, pref.getString(KEY_ALAMAT_PELANGGAN, null));
+        user.put(KEY_JENIS_LOGIN, pref.getString(KEY_JENIS_LOGIN, null));
         // return user
         return user;
     }

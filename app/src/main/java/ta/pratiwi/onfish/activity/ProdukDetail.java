@@ -2,13 +2,16 @@ package ta.pratiwi.onfish.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,79 +28,80 @@ import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
 import ta.pratiwi.onfish.app.SessionManager;
 
-public class RegistrasiActivity extends AppCompatActivity {
+public class ProdukDetail extends AppCompatActivity {
 
-    TextView txtNama, txtEmail, txtPassword, txtNomor_hp,txtAlamat;
-    Button btnReg;
-    private ProgressDialog pDialog;
     SessionManager session;
-
-    public String SERVER_POST = Config.URL+"reg_pelangan.php";
-
-    private static final String TAG = RegistrasiActivity.class.getSimpleName();
+    private ProgressDialog pDialog;
+    public String SERVER_POST_DATA = Config.URL+"create_invoice.php";
+    private static final String TAG = ProdukDetail.class.getSimpleName();
+    TextView txtJumBayar;
+    Button btnInvoice;
+    private RadioGroup rg;
+    private RadioButton rbA, rbB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registrasi);
+        setContentView(R.layout.activity_bayar);
 
+        getSupportActionBar().setTitle("Bayar");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Registrasi");
 
+        txtJumBayar = (TextView) findViewById(R.id.txt_jum_bayar);
+        btnInvoice = (Button) findViewById(R.id.btn_buat_inv);
+
+
+        ///
         session = new SessionManager(getApplicationContext());
+        session.checkLogin();
+        ///
+        HashMap<String, String> user = session.getUserDetails();
+        final String total_bayar = getIntent().getStringExtra("key_total_bayar");
+        final String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
+        final String id_keranjang = getIntent().getStringExtra("key_id_keranjang");
 
-        txtNama = (TextView) findViewById(R.id.nama);
-        txtEmail = (TextView) findViewById(R.id.email);
-        txtPassword = (TextView) findViewById(R.id.password);
-        txtNomor_hp = (TextView) findViewById(R.id.nomor_hp);
-        txtAlamat = (TextView) findViewById(R.id.alamat);
-        btnReg = (Button) findViewById(R.id.registrasi_button);
+        rg = (RadioGroup) findViewById(R.id.rg_jenis);
+        rbA = (RadioButton) findViewById(R.id.rb_pil_a);
+        rbB = (RadioButton) findViewById(R.id.rb_pil_b);
 
-        btnReg.setOnClickListener(new View.OnClickListener() {
+        txtJumBayar.setText("Rp. "+total_bayar);
+        btnInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(txtPassword.getText().length() < 6){
-                    Toast.makeText(RegistrasiActivity.this, "Password minimal 6 karakter!", Toast.LENGTH_SHORT).show();
+                String jenis = "";
+                if(rbA.isChecked()){
+                    jenis = "A";
                 }
-                else{
-                    //registrasikan user
-                    String nama = txtNama.getText().toString();
-                    String email = txtEmail.getText().toString();
-                    String password = txtPassword.getText().toString();
-                    String nomor_hp = txtNomor_hp.getText().toString();
-                    String alamat = txtAlamat.getText().toString();
-
-                    new postData(nama, email, password, nomor_hp, alamat).execute();
+                if(rbB.isChecked()) {
+                    jenis = "J";
                 }
+                new postData(total_bayar, id_pelanggan, id_keranjang, jenis).execute();
             }
         });
 
     }
 
     private class postData extends AsyncTask<Void,Void,String> {
-        private String nama;
-        private String email;
-        private String password;
-        private String nomor_hp;
-        private String alamat;
+        private String total_bayar;
+        private String id_pelanggan;
+        private String id_keranjang;
+        private String jenis;
 
-        public postData(String nama, String email, String password, String nomor_hp, String alamat){
-            this.nama = nama;
-            this.email = email;
-            this.password = password;
-            this.nomor_hp = nomor_hp;
-            this.alamat = alamat;
+        public postData(String total_bayar, String id_pelanggan, String id_keranjang, String jenis){
+            this.total_bayar = total_bayar;
+            this.id_pelanggan = id_pelanggan;
+            this.id_keranjang = id_keranjang;
+            this.jenis = jenis;
         }
 
         private String scs = "";
         private String psn = "";
-        private String nm = "";
-        private String id_pelanggan = "";
+        private String id_transaksi = "";
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(RegistrasiActivity.this);
+            pDialog = new ProgressDialog(ProdukDetail.this);
             pDialog.setMessage("Loading..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -106,20 +110,21 @@ public class RegistrasiActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-
             try {
+                //menganbil data-data yang akan dikirim
+
+                //generate hashMap to store encodedImage and the name
                 HashMap<String,String> detail = new HashMap<>();
-                detail.put("nama", nama);
-                detail.put("email", email);
-                detail.put("password", password);
-                detail.put("nomor_hp", nomor_hp);
-                detail.put("alamat", alamat);
+                detail.put("total_bayar", total_bayar);
+                detail.put("id_pelanggan", id_pelanggan);
+                detail.put("id_keranjang", id_keranjang);
+                detail.put("jenis", jenis);
 
                 try{
                     //convert this HashMap to encodedUrl to send to php file
                     String dataToSend = hashMapToUrl(detail);
                     //make a Http request and send data to php file
-                    String response = Request.post(SERVER_POST,dataToSend);
+                    String response = Request.post(SERVER_POST_DATA,dataToSend);
 
                     //dapatkan respon
                     Log.e("Respon", response);
@@ -127,8 +132,7 @@ public class RegistrasiActivity extends AppCompatActivity {
                     JSONObject ob = new JSONObject(response);
                     scs = ob.getString("success");
                     psn = ob.getString("message");
-                    nm = ob.getString("nama");
-                    id_pelanggan = ob.getString("id_pelanggan");
+                    id_transaksi = ob.getString("id_transaksi");
 
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -141,27 +145,24 @@ public class RegistrasiActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
             return null;
         }
+
+
 
         @Override
         protected void onPostExecute(String s) {
             pDialog.dismiss();
 
             if(scs.contains("1")){
-                //buat sesi login
-                session.createLoginSession(id_pelanggan, nama, email, nomor_hp, alamat, "pelanggan");
-
-                Toast.makeText(getApplicationContext(), "Selamat datang "+nm,Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(RegistrasiActivity.this, MainActivity.class);
+                Toast.makeText(ProdukDetail.this, psn, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ProdukDetail.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
-
-                //terus tutup activity ini
-                finish();
+                //buka printed invoice
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://203.153.21.11/app/onfish/api/print/?id_transaksi="+id_transaksi));
+                startActivity(browserIntent);
             }
             if(scs.contains("0")){
                 Toast.makeText(getApplicationContext(), psn,Toast.LENGTH_SHORT).show();
@@ -196,4 +197,5 @@ public class RegistrasiActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

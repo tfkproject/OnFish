@@ -98,10 +98,18 @@ public class MainActivity extends AppCompatActivity
             //ambil data user
             HashMap<String, String> user = session.getUserDetails();
             String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
-            String nm_pelanggan = user.get(SessionManager.KEY_NM_PELANGGAN);
+            final String nm_pelanggan = user.get(SessionManager.KEY_NM_PELANGGAN);
             String email_pelanggan = user.get(SessionManager.KEY_MAIL_PELANGGAN);
             String nohp_pelanggan = user.get(SessionManager.KEY_NOHP_PELANGGAN);
             String alamat_pelanggan = user.get(SessionManager.KEY_ALAMAT_PELANGGAN);
+            String jenis_login = user.get(SessionManager.KEY_JENIS_LOGIN);
+
+            if(jenis_login.equals("penjual")){
+                finish();
+                //masuk ke halaman utama penjual
+                Intent intent = new Intent(MainActivity.this, MainPenjualActivity.class);
+                startActivity(intent);
+            }
 
             name.setText(nm_pelanggan);
             email.setText(email_pelanggan);
@@ -111,7 +119,7 @@ public class MainActivity extends AppCompatActivity
             plg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Toast.makeText(MainActivity.this, "Masuk ke profil", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, ""+nm_pelanggan, Toast.LENGTH_SHORT).show();
                 }
             });
         }

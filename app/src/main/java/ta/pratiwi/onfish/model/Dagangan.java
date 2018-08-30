@@ -3,13 +3,16 @@ package ta.pratiwi.onfish.model;
 public class Dagangan {
     private String id_dagangan;
     private String id_petani;
-    private String nama_petani;
+    private String nama_penjual;
     private String id_kategori_ikan;
     private String nama_ikan;
     private String link_foto;
+    private String berat_tersedia;
     private String harga_per_kg;
     private String deskripsi;
     private String nohp;
+    private String lat;
+    private String lon;
 
     public String getId_dagangan() {
         return id_dagangan;
@@ -27,12 +30,12 @@ public class Dagangan {
         this.id_petani = id_petani;
     }
 
-    public String getNama_petani() {
-        return nama_petani;
+    public String getNama_penjual() {
+        return nama_penjual;
     }
 
-    public void setNama_petani(String nama_petani) {
-        this.nama_petani = nama_petani;
+    public void setNama_penjual(String nama_penjual) {
+        this.nama_penjual = nama_penjual;
     }
 
     public String getId_kategori_ikan() {
@@ -59,6 +62,14 @@ public class Dagangan {
         this.link_foto = link_foto;
     }
 
+    public String getBerat_tersedia() {
+        return berat_tersedia;
+    }
+
+    public void setBerat_tersedia(String berat_tersedia) {
+        this.berat_tersedia = berat_tersedia;
+    }
+
     public String getHarga_per_kg() {
         return harga_per_kg;
     }
@@ -81,5 +92,21 @@ public class Dagangan {
 
     public void setNohp(String nohp) {
         this.nohp = nohp;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
     }
 }

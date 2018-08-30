@@ -38,21 +38,21 @@ import java.util.Map;
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.activity.DaganganActivity;
 import ta.pratiwi.onfish.activity.SearchActivity;
-import ta.pratiwi.onfish.adapter.IkanKategoriAdapter;
+import ta.pratiwi.onfish.adapter.JenisIkanAdapter;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
 import ta.pratiwi.onfish.app.SessionManager;
-import ta.pratiwi.onfish.model.IkanKategori;
+import ta.pratiwi.onfish.model.JenisIkan;
 
 
 public class HomeFragment extends Fragment  {
 
     private RecyclerView rc;
-    private IkanKategoriAdapter adapter;
-    private List<IkanKategori> itemList;
+    private JenisIkanAdapter adapter;
+    private List<JenisIkan> itemList;
     private ProgressDialog pDialog;
 
-    public String SERVER = Config.URL+"kategori.php";
+    public String SERVER = Config.URL+"jenis_ikan.php";
 
     SessionManager session;
 
@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment  {
         rc = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         itemList = new ArrayList<>();
-        adapter = new IkanKategoriAdapter(getContext(), itemList, new IkanKategoriAdapter.CardAdapterListener() {
+        adapter = new JenisIkanAdapter(getContext(), itemList, new JenisIkanAdapter.CardAdapterListener() {
             @Override
             public void onCardSelected(int position, TextView id_kategori_ikan, TextView nama_ikan, ImageView image) {
                 //ini masuk ke layout petaniActivity
@@ -140,12 +140,12 @@ public class HomeFragment extends Fragment  {
                             JSONObject c = products.getJSONObject(i);
 
                             // Storing each json item in variable
-                            String id_kategori_ikan = c.getString("id_kategori_ikan");
+                            String idjenis = c.getString("id_jenis_ikan");
                             String nama_ikan = c.getString("nama_ikan");
                             String foto = c.getString("foto");
 
-                            IkanKategori k = new IkanKategori();
-                            k.setId_kategori_ikan(id_kategori_ikan);
+                            JenisIkan k = new JenisIkan();
+                            k.setId_kategori_ikan(idjenis);
                             k.setNama_ikan(nama_ikan);
                             k.setLink_foto(foto);
 

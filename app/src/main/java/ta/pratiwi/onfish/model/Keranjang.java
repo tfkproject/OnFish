@@ -11,6 +11,7 @@ public class Keranjang {
     private String link_foto;
     private String jum_kg;
     private String harga_total;
+    private String berat_tersedia;
 
     public String getId_item_beli() {
         return id_item_beli;
@@ -90,5 +91,13 @@ public class Keranjang {
 
     public void setHarga_total(String harga_total) {
         this.harga_total = harga_total;
+    }
+
+    public String getBerat_tersedia() {
+        return berat_tersedia;
+    }
+
+    public void setBerat_tersedia(String berat_tersedia) {
+        this.berat_tersedia = berat_tersedia;
     }
 }

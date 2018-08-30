@@ -13,7 +13,8 @@
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_map_black"
-            android:title="Sekitaran" />
+            android:title="Sekitaran"
+            android:visible="false"/>
         <!--<item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp">
+        android:layout_margin="10dp">
 
         <ImageView
             android:id="@+id/img_ikan"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:fitsSystemWindows="true"
+            android:padding="5dp"
             android:scaleType="centerCrop"/>
 
         <TextView
@@ -32,29 +35,60 @@
             android:layout_marginTop="5dp"
             android:orientation="horizontal" android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hubungi"
+                android:textStyle="bold"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center|start"/>
+
             <ImageButton
                 android:id="@+id/btn_telp"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center|start"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_wa" />
+                android:src="@drawable/ic_wa"/>
 
             <TextView
-                android:id="@+id/txt_telp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="nohp"
+                android:text="Lokasi Penjual"
                 android:textStyle="bold"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_gravity="center|start"/>
+
+            <ImageButton
+                android:id="@+id/btn_direk"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center|start"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_directions"/>
         </LinearLayout>
 
         <TextView
             android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jumlah Kg:"
+            android:text="Jumlah Tersedia:"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/txt_jum_tersedia"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[jum_tersedia]"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pesan berapa Kg:"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -95,6 +129,7 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_shopping_cart_black"
             android:text="Tambah ke keranjang"/>
 
     </LinearLayout>

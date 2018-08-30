@@ -15,12 +15,12 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ta.pratiwi.onfish.R;
-import ta.pratiwi.onfish.model.IkanKategori;
+import ta.pratiwi.onfish.model.JenisIkan;
 
-public class IkanKategoriAdapter extends RecyclerView.Adapter<IkanKategoriAdapter.MyViewHolder>  {
+public class JenisIkanAdapter extends RecyclerView.Adapter<JenisIkanAdapter.MyViewHolder>  {
 
     private Context mContext;
-    private List<IkanKategori> itemList;
+    private List<JenisIkan> itemList;
     private CardAdapterListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -37,7 +37,7 @@ public class IkanKategoriAdapter extends RecyclerView.Adapter<IkanKategoriAdapte
         }
     }
 
-    public IkanKategoriAdapter(Context mContext, List<IkanKategori> itemList, CardAdapterListener listener) {
+    public JenisIkanAdapter(Context mContext, List<JenisIkan> itemList, CardAdapterListener listener) {
         this.mContext = mContext;
         this.itemList = itemList;
         this.listener = listener;
@@ -53,12 +53,12 @@ public class IkanKategoriAdapter extends RecyclerView.Adapter<IkanKategoriAdapte
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        IkanKategori ikanKategoriItem = itemList.get(position);
+        JenisIkan jenisIkanItem = itemList.get(position);
 
-        holder.ikan.setText(ikanKategoriItem.getNama_ikan());
-        holder.id_kat_ikan.setText(ikanKategoriItem.getId_kategori_ikan());
+        holder.ikan.setText(jenisIkanItem.getNama_ikan());
+        holder.id_kat_ikan.setText(jenisIkanItem.getId_kategori_ikan());
         // loading item cover using Picasso library
-        Picasso.with(mContext).load(ikanKategoriItem.getLink_foto()).into(holder.thumbnail);
+        Picasso.with(mContext).load(jenisIkanItem.getLink_foto()).into(holder.thumbnail);
 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override

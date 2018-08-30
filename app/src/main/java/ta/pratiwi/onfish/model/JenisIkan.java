@@ -1,6 +1,6 @@
 package ta.pratiwi.onfish.model;
 
-public class IkanKategori {
+public class JenisIkan {
     private String id_kategori_ikan;
     private String nama_ikan;
     private String link_foto;
