@@ -1,16 +1,16 @@
 package ta.pratiwi.onfish.model;
 
 public class JenisIkan {
-    private String id_kategori_ikan;
+    private String id_jenis_ikan;
     private String nama_ikan;
     private String link_foto;
 
-    public String getId_kategori_ikan() {
-        return id_kategori_ikan;
+    public String getId_jenis_ikan() {
+        return id_jenis_ikan;
     }
 
-    public void setId_kategori_ikan(String id_kategori_ikan) {
-        this.id_kategori_ikan = id_kategori_ikan;
+    public void setId_jenis_ikan(String id_jenis_ikan) {
+        this.id_jenis_ikan = id_jenis_ikan;
     }
 
     public String getNama_ikan() {

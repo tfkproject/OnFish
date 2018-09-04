@@ -336,7 +336,7 @@ public class SearchActivity extends AppCompatActivity {
                             p.setId_dagangan(id_dagangan);
                             p.setId_petani(id_petani);
                             p.setNama_penjual(nama_penjual);
-                            p.setId_kategori_ikan(id_kategori_ikan);
+                            p.setId_jenis_ikan(id_kategori_ikan);
                             p.setNama_ikan(nama_ikan);
                             p.setBerat_tersedia(berat_kg);
                             p.setHarga_per_kg(harga);

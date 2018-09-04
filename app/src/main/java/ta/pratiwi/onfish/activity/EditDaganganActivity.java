@@ -25,11 +25,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +54,7 @@ import ta.pratiwi.onfish.app.Request;
 import ta.pratiwi.onfish.app.SessionManager;
 import ta.pratiwi.onfish.model.JenisIkan;
 
-public class TambahDaganganActivity extends AppCompatActivity {
+public class EditDaganganActivity extends AppCompatActivity {
 
     private Button btnGambar, btnSubmit;
     private ImageView imgDagangan;
@@ -64,12 +65,12 @@ public class TambahDaganganActivity extends AppCompatActivity {
     private SpinAdapter spinAdapter;
 
     public String SERVER = Config.URL+"jenis_ikan.php";
-    public String SERVER_POST = Config.URL+"dagangan_tambah.php";
+    public String SERVER_POST = Config.URL+"dagangan_update.php";
     public String id_jenis_ikan, timestamp;
 
     SessionManager session;
 
-    private static final String TAG = TambahDaganganActivity.class.getSimpleName();
+    private static final String TAG = EditDaganganActivity.class.getSimpleName();
 
     int RESULT_SELECT_IMAGE = 1;
 
@@ -80,14 +81,22 @@ public class TambahDaganganActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tambah_dagangan);
+        setContentView(R.layout.activity_edit_dagangan);
 
         session = new SessionManager(getApplicationContext());
 
         HashMap<String, String> user = session.getUserDetails();
         final String id_penjual = user.get(SessionManager.KEY_ID_PELANGGAN);
 
-        getSupportActionBar().setTitle("Tambah Dagangan");
+        final String id_dagangan = getIntent().getStringExtra("key_id_dagangan");
+        final String id_jenis_ikan = getIntent().getStringExtra("key_id_jenis_ikan");
+        //final String jenis_ikan = getIntent().getStringExtra("key_jenis_ikan");
+        final String url_foto = getIntent().getStringExtra("key_url_foto");
+        final String berat = getIntent().getStringExtra("key_berat");
+        final String harga = getIntent().getStringExtra("key_harga");
+        final String desk = getIntent().getStringExtra("key_desk");
+
+        getSupportActionBar().setTitle("Edit Dagangan");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imgDagangan = (ImageView) findViewById(R.id.img_dagangan);
@@ -104,11 +113,17 @@ public class TambahDaganganActivity extends AppCompatActivity {
 
         new getJenisIkan().execute();
 
-        spinAdapter = new SpinAdapter(TambahDaganganActivity.this,
+        spinAdapter = new SpinAdapter(EditDaganganActivity.this,
                 android.R.layout.simple_spinner_item,
                 itemList);
 
         jenisIkan.setAdapter(spinAdapter);
+
+        Picasso.with(EditDaganganActivity.this).load(url_foto).into(imgDagangan);
+        //txtJenis.setText(jenis_ikan);
+        edtBerat.setText(berat);
+        edtHarga.setText(harga);
+        edtDeskripsi.setText(desk);
 
         btnGambar = (Button) findViewById(R.id.btn_gmbr);
         btnGambar.setOnClickListener(new View.OnClickListener() {
@@ -123,24 +138,29 @@ public class TambahDaganganActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(imgDagangan.getDrawable() != null){
-                    //String nama = edtNama.getText().toString();
-                    String berat = edtBerat.getText().toString();
-                    String harga = edtHarga.getText().toString();
-                    String desk = edtDeskripsi.getText().toString();
-                    //get image in bitmap format
-                    Bitmap image = ((BitmapDrawable) imgDagangan.getDrawable()).getBitmap();
-                    String file_name = "IMG_"+timestamp;
+                    try{
+                        //String nama = edtNama.getText().toString();
+                        String berat = edtBerat.getText().toString();
+                        String harga = edtHarga.getText().toString();
+                        String desk = edtDeskripsi.getText().toString();
+                        //get image in bitmap format
+                        Bitmap image = ((BitmapDrawable) imgDagangan.getDrawable()).getBitmap();
+                        String file_name = "IMG_"+timestamp;
 
-                    new inputDagangan(
-                            id_penjual,
-                            id_jenis_ikan,
-                            //nama,
-                            berat,
-                            harga,
-                            desk,
-                            file_name,
-                            image
-                    ).execute();
+                        new updateDagangan(
+                                id_dagangan,
+                                id_penjual,
+                                id_jenis_ikan,
+                                //nama,
+                                berat,
+                                harga,
+                                desk,
+                                file_name,
+                                image
+                        ).execute();
+                    } catch (Exception e){
+                        Toast.makeText(EditDaganganActivity.this, "Foto perlu diganti", Toast.LENGTH_SHORT).show();
+                    }
                 }else{
                     Toast.makeText(getApplicationContext(),"Foto perlu ditambahkan",Toast.LENGTH_SHORT).show();
                 }
@@ -156,7 +176,7 @@ public class TambahDaganganActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(TambahDaganganActivity.this);
+            pDialog = new ProgressDialog(EditDaganganActivity.this);
             pDialog.setMessage("Loading...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -224,7 +244,8 @@ public class TambahDaganganActivity extends AppCompatActivity {
 
     }
 
-    private class inputDagangan extends AsyncTask<Void,Void,String> {
+    private class updateDagangan extends AsyncTask<Void,Void,String> {
+        private String id_dagangan;
         private String id_penjual;
         private String id_jenis_ikan;
         //private String nama;
@@ -234,7 +255,8 @@ public class TambahDaganganActivity extends AppCompatActivity {
         private String file_name;
         private Bitmap bitmap;
 
-        public inputDagangan(
+        public updateDagangan(
+                String id_dagangan,
                 String id_penjual,
                 String id_jenis_ikan,
                 //String nama,
@@ -243,6 +265,7 @@ public class TambahDaganganActivity extends AppCompatActivity {
                 String desk,
                 String file_name,
                 Bitmap bitmap){
+            this.id_dagangan = id_dagangan;
             this.id_penjual = id_penjual;
             this.id_jenis_ikan = id_jenis_ikan;
             //this.nama = nama;
@@ -260,7 +283,7 @@ public class TambahDaganganActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(TambahDaganganActivity.this);
+            pDialog = new ProgressDialog(EditDaganganActivity.this);
             pDialog.setMessage("Loading..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -282,6 +305,7 @@ public class TambahDaganganActivity extends AppCompatActivity {
 
                 //generate hashMap to store encodedImage and the name
                 HashMap<String,String> detail = new HashMap<>();
+                detail.put("id_dagangan", id_dagangan);
                 detail.put("id_penjual", id_penjual);
                 detail.put("id_jenis_ikan", id_jenis_ikan);
                 //detail.put("nama", nama);
@@ -325,11 +349,11 @@ public class TambahDaganganActivity extends AppCompatActivity {
             pDialog.dismiss();
 
             if(scs.contains("1")){
-                Toast.makeText(TambahDaganganActivity.this, psn, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditDaganganActivity.this, psn, Toast.LENGTH_SHORT).show();
                 finish();
             }
             if(scs.contains("0")){
-                Toast.makeText(TambahDaganganActivity.this, psn,Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditDaganganActivity.this, psn,Toast.LENGTH_SHORT).show();
             }
 
         }

@@ -56,7 +56,7 @@ public class JenisIkanAdapter extends RecyclerView.Adapter<JenisIkanAdapter.MyVi
         JenisIkan jenisIkanItem = itemList.get(position);
 
         holder.ikan.setText(jenisIkanItem.getNama_ikan());
-        holder.id_kat_ikan.setText(jenisIkanItem.getId_kategori_ikan());
+        holder.id_kat_ikan.setText(jenisIkanItem.getId_jenis_ikan());
         // loading item cover using Picasso library
         Picasso.with(mContext).load(jenisIkanItem.getLink_foto()).into(holder.thumbnail);
 

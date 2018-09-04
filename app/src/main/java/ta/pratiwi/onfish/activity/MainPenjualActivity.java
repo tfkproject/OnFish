@@ -80,43 +80,58 @@ public class MainPenjualActivity extends AppCompatActivity {
             log_in = true;
             //ambil data user
             HashMap<String, String> user = session.getUserDetails(); //bukan pelanggan, tapi user sbnarnya ni
-            String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
+            final String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
             String nm_pelanggan = user.get(SessionManager.KEY_NM_PELANGGAN);
             String email_pelanggan = user.get(SessionManager.KEY_MAIL_PELANGGAN);
             String nohp_pelanggan = user.get(SessionManager.KEY_NOHP_PELANGGAN);
             String alamat_pelanggan = user.get(SessionManager.KEY_ALAMAT_PELANGGAN);
 
+            txtNotif = (TextView) findViewById(R.id.txt_notif);
+
+            rc = (RecyclerView) findViewById(R.id.recycler_view);
+
+            items = new ArrayList<>();
+
+            ////new getProduk(id_umkm).execute();
+
+            adapter = new DaganganPenjualAdapter(MainPenjualActivity.this, items, new DaganganPenjualAdapter.AdapterListener() {
+                @Override
+                public void onSelected(
+                        int position,
+                        String id_dagangan,
+                        String id_jenis_ikan,
+                        String jenis_ikan,
+                        String url_gambar,
+                        String berat_tersedia,
+                        String harga,
+                        String desk
+                ) {
+                    Intent intent = new Intent(MainPenjualActivity.this, DaganganPenjualDetailActivity.class);
+                    intent.putExtra("key_id_penjual", id_pelanggan);
+                    intent.putExtra("key_id_dagangan", id_dagangan);
+                    intent.putExtra("key_url_foto", url_gambar);
+                    intent.putExtra("key_id_jenis_ikan", id_jenis_ikan);
+                    intent.putExtra("key_jenis_ikan", jenis_ikan);
+                    intent.putExtra("key_berat", berat_tersedia);
+                    intent.putExtra("key_harga", harga);
+                    intent.putExtra("key_desk", desk);
+                    startActivity(intent);
+                }
+            });
+
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(MainPenjualActivity.this);
+            rc.setLayoutManager(mLayoutManager);
+            rc.setAdapter(adapter);
+
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainPenjualActivity.this, TambahDaganganActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
-
-        txtNotif = (TextView) findViewById(R.id.txt_notif);
-
-        rc = (RecyclerView) findViewById(R.id.recycler_view);
-
-        items = new ArrayList<>();
-
-        ////new getProduk(id_umkm).execute();
-
-        adapter = new DaganganPenjualAdapter(MainPenjualActivity.this, items, new DaganganPenjualAdapter.AdapterListener() {
-            @Override
-            public void onSelected(int position, String id_dagangan) {
-                Intent intent = new Intent(MainPenjualActivity.this, MainPenjualActivity.class);
-                intent.putExtra("key_id_pdk", id_dagangan);
-                startActivity(intent);
-            }
-        });
-
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(MainPenjualActivity.this);
-        rc.setLayoutManager(mLayoutManager);
-        rc.setAdapter(adapter);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainPenjualActivity.this, TambahDaganganActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private class getProduk extends AsyncTask<Void,Void,String> {
@@ -180,7 +195,7 @@ public class MainPenjualActivity extends AppCompatActivity {
                             p.setId_dagangan(id_dagangan);
                             p.setId_petani(id_petani);
                             p.setNama_penjual(nama_penjual);
-                            p.setId_kategori_ikan(id_kategori_ikan);
+                            p.setId_jenis_ikan(id_kategori_ikan);
                             p.setNama_ikan(nama_ikan);
                             p.setBerat_tersedia(berat_kg);
                             p.setHarga_per_kg(harga);

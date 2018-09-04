@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment  {
                             String foto = c.getString("foto");
 
                             JenisIkan k = new JenisIkan();
-                            k.setId_kategori_ikan(idjenis);
+                            k.setId_jenis_ikan(idjenis);
                             k.setNama_ikan(nama_ikan);
                             k.setLink_foto(foto);
 

@@ -43,12 +43,21 @@ public class DaganganPenjualAdapter extends RecyclerView.Adapter<DaganganPenjual
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onSelected(position, items.get(position).getId_dagangan());
+                listener.onSelected(
+                        position,
+                        items.get(position).getId_dagangan(),
+                        items.get(position).getId_jenis_ikan(),
+                        items.get(position).getNama_ikan(),
+                        items.get(position).getLink_foto(),
+                        items.get(position).getBerat_tersedia(),
+                        items.get(position).getHarga_per_kg(),
+                        items.get(position).getDeskripsi()
+                );
             }
         });
         Picasso.with(context).load(items.get(position).getLink_foto()).into(holder.fotoProduk);
         holder.txtNama.setText(items.get(position).getNama_ikan());
-        holder.txtBerat.setText(items.get(position).getBerat_tersedia()+" gram");
+        holder.txtBerat.setText("Tersedia: "+items.get(position).getBerat_tersedia()+" Kg");
         holder.txtHarga.setText("Rp. "+items.get(position).getHarga_per_kg());
     }
 
@@ -75,6 +84,15 @@ public class DaganganPenjualAdapter extends RecyclerView.Adapter<DaganganPenjual
     }
 
     public interface AdapterListener {
-        void onSelected(int position, String id_dagangan);
+        void onSelected(
+                int position,
+                String id_dagangan,
+                String id_jenis_ikan,
+                String jenis_ikan,
+                String url_gambar,
+                String berat_tersedia,
+                String harga,
+                String desk
+        );
     }
 }

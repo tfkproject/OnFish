@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name="ta.pratiwi.onfish.activity.DaganganActivity" />
+        <activity android:name="ta.pratiwi.onfish.activity.DaganganPenjualDetailActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.KeranjangActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.LoginActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.LoginPenjualActivity" />
@@ -39,6 +40,7 @@
         <activity android:name="ta.pratiwi.onfish.activity.KonfirmasiBarangActivity"/>
         <activity android:name="ta.pratiwi.onfish.activity.CariSekitarActivity"/>
         <activity android:name="ta.pratiwi.onfish.activity.TambahDaganganActivity"/>
+        <activity android:name="ta.pratiwi.onfish.activity.EditDaganganActivity"/>
         <activity android:name="ta.pratiwi.onfish.activity.DirectionMap"/>
 
         <!--<meta-data

@@ -4,7 +4,7 @@ public class Dagangan {
     private String id_dagangan;
     private String id_petani;
     private String nama_penjual;
-    private String id_kategori_ikan;
+    private String id_jenis_ikan;
     private String nama_ikan;
     private String link_foto;
     private String berat_tersedia;
@@ -38,12 +38,12 @@ public class Dagangan {
         this.nama_penjual = nama_penjual;
     }
 
-    public String getId_kategori_ikan() {
-        return id_kategori_ikan;
+    public String getId_jenis_ikan() {
+        return id_jenis_ikan;
     }
 
-    public void setId_kategori_ikan(String id_kategori_ikan) {
-        this.id_kategori_ikan = id_kategori_ikan;
+    public void setId_jenis_ikan(String id_jenis_ikan) {
+        this.id_jenis_ikan = id_jenis_ikan;
     }
 
     public String getNama_ikan() {

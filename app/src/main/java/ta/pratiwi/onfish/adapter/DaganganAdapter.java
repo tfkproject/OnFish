@@ -70,7 +70,7 @@ public class DaganganAdapter extends RecyclerView.Adapter<DaganganAdapter.MyView
         final Dagangan daganganItem = itemList.get(position);
 
         holder.id_dagangan.setText(daganganItem.getId_dagangan());
-        holder.id_kat_ikan.setText(daganganItem.getId_kategori_ikan());
+        holder.id_kat_ikan.setText(daganganItem.getId_jenis_ikan());
         holder.ikan.setText(daganganItem.getNama_ikan());
         holder.beratKg.setText("Tersedia: "+daganganItem.getBerat_tersedia()+" Kg");
         holder.petani.setText(daganganItem.getNama_penjual());
