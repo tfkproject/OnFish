@@ -16,11 +16,9 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "ta.pratiwi.onfish"
         minSdkVersion 16
-        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -56,8 +54,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:12.0.1'
     implementation 'com.google.android.gms:play-services-location:12.0.1'
     //lib untuk Retrofit
-    compile 'com.google.code.gson:gson:1.7.2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    implementation 'com.google.code.gson:gson:1.7.2'
+    implementation 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     // oneSignal SDK
     implementation 'com.onesignal:OneSignal:[3.9.1, 3.99.99]'
 }

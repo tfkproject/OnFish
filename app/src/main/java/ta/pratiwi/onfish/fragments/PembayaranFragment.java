@@ -91,7 +91,7 @@ public class PembayaranFragment extends Fragment  {
                 @Override
                 public void onButtonSelected(int position, String id_transaksi) {
                     //buka printed invoice
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://203.153.21.11/app/onfish/api/print/?id_transaksi="+id_transaksi));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Config.URL+"print/?id_transaksi="+id_transaksi));
                     startActivity(browserIntent);
                 }
             });

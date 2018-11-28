@@ -161,7 +161,7 @@ public class BayarActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 //buka printed invoice
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://203.153.21.11/app/onfish/api/print/?id_transaksi="+id_transaksi));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Config.URL+"print/?id_transaksi="+id_transaksi));
                 startActivity(browserIntent);
             }
             if(scs.contains("0")){
