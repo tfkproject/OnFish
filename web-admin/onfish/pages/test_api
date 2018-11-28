@@ -1,0 +1,9 @@
+curl --include \
+     --request POST \
+     --header "Content-Type: application/json; charset=utf-8" \
+     --header "Authorization: Basic NWYzNjk1YTEtZGQ2ZC00ZTAyLWFkNzUtYjg1MjAwOGRlODE2" \
+     --data-binary "{\"app_id\": \"38bd68b2-fdbd-4291-9bcf-6e5f9739039d\",
+\"contents\": {\"en\": \"Ada ikan baru di posting, yuk lihat! Siapa tau pengen order!\"},
+\"included_segments\": [\"Subscribed Users\"]}" \
+     https://onesignal.com/api/v1/notifications
+
