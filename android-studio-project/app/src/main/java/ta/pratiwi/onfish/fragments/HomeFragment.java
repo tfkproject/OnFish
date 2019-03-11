@@ -41,7 +41,7 @@ import ta.pratiwi.onfish.activity.SearchActivity;
 import ta.pratiwi.onfish.adapter.JenisIkanAdapter;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.model.JenisIkan;
 
 
@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment  {
 
     public String SERVER = Config.URL+"jenis_ikan.php";
 
-    SessionManager session;
+    SessionManagerUser session;
 
     boolean log_in;
 
@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment  {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_home_layout, container, false);
 
-        session = new SessionManager(getActivity());
+        session = new SessionManagerUser(getActivity());
         session.checkLogin();
 
         //kalau belum login

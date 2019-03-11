@@ -13,6 +13,7 @@ public class Dagangan {
     private String nohp;
     private String lat;
     private String lon;
+    private String tanggal_waktu;
 
     public String getId_dagangan() {
         return id_dagangan;
@@ -108,5 +109,13 @@ public class Dagangan {
 
     public void setLon(String lon) {
         this.lon = lon;
+    }
+
+    public String getTanggal_waktu() {
+        return tanggal_waktu;
+    }
+
+    public void setTanggal_waktu(String tanggal_waktu) {
+        this.tanggal_waktu = tanggal_waktu;
     }
 }

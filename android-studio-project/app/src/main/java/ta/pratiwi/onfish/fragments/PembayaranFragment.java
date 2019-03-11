@@ -30,7 +30,7 @@ import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.adapter.PembayaranAdapter;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.model.Invoice;
 
 
@@ -43,7 +43,7 @@ public class PembayaranFragment extends Fragment  {
 
     public String SERVER = Config.URL+"pembayaran.php";
 
-    SessionManager session;
+    SessionManagerUser session;
 
     private static final String TAG = PembayaranFragment.class.getSimpleName();
 
@@ -54,7 +54,7 @@ public class PembayaranFragment extends Fragment  {
 
         TextView stsLogin = (TextView) rootView.findViewById(R.id.txt_status_login);
         ///
-        session = new SessionManager(getContext());
+        session = new SessionManagerUser(getContext());
         session.checkLogin();
         //kalau belum login
         if(!session.isLoggedIn()){
@@ -66,7 +66,7 @@ public class PembayaranFragment extends Fragment  {
             stsLogin.setVisibility(View.GONE);
             //ambil data user
             HashMap<String, String> user = session.getUserDetails();
-            String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
+            String id_pelanggan = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
 
             rc = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
@@ -159,6 +159,7 @@ public class PembayaranFragment extends Fragment  {
                             String total_bayar = c.getString("total_bayar");
                             String waktu = c.getString("waktu");
                             String status = c.getString("jenis");
+                            String ket = c.getString("status");
 
                             Invoice p = new Invoice();
                             p.setId_transaksi(id_transaksi);
@@ -167,6 +168,7 @@ public class PembayaranFragment extends Fragment  {
                             p.setTotal_bayar(total_bayar);
                             p.setWaktu(waktu);
                             p.setJenis(status);
+                            p.setStatus(ket);
 
                             itemList.add(p);
 

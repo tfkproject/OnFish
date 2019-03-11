@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ta.nanda.pencarianruko.MainActivity">
+
+    <item
+        android:id="@+id/action_orderan"
+        android:orderInCategory="100"
+        android:title="Orderan"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"

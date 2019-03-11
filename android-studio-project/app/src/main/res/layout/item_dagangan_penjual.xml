@@ -53,6 +53,15 @@
                 android:textSize="11dp"
                 android:text="[harga]"/>
 
+            <TextView
+                android:id="@+id/tanggal_waktu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/songs_count"
+                android:text="[tanggal_waktu]"
+                android:layout_gravity="end"
+                android:layout_marginRight="7dp"/>
+
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

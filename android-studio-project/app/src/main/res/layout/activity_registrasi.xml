@@ -76,7 +76,7 @@
                     android:id="@+id/nomor_hp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nomor HP"
+                    android:hint="Nomor HP (wajib 62 tanpa +)"
                     android:inputType="number"
                     android:maxLines="1"
                     android:singleLine="true" />

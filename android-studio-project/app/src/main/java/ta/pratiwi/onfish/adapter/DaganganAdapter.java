@@ -2,6 +2,7 @@ package ta.pratiwi.onfish.adapter;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +14,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.model.Dagangan;
@@ -32,6 +36,7 @@ public class DaganganAdapter extends RecyclerView.Adapter<DaganganAdapter.MyView
         public TextView petani;
         public TextView beratKg;
         public TextView harga;
+        public TextView tgl_wkt;
         public CardView cardView;
 
         public ImageButton btn_beli;
@@ -46,6 +51,7 @@ public class DaganganAdapter extends RecyclerView.Adapter<DaganganAdapter.MyView
             ikan = (TextView) view.findViewById(R.id.nama_ikan);
             id_kat_ikan = (TextView) view.findViewById(R.id.id_kat_ikan);
             harga = (TextView) view.findViewById(R.id.harga);
+            tgl_wkt = (TextView) view.findViewById(R.id.tanggal_waktu);
 
             btn_beli = (ImageButton) view.findViewById(R.id.overflow);
         }
@@ -69,6 +75,10 @@ public class DaganganAdapter extends RecyclerView.Adapter<DaganganAdapter.MyView
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Dagangan daganganItem = itemList.get(position);
 
+        if(Integer.valueOf(daganganItem.getBerat_tersedia()) == 0){
+            holder.cardView.setVisibility(View.GONE); //sembunyi yang ketersediaannya sudh habis
+        }
+
         holder.id_dagangan.setText(daganganItem.getId_dagangan());
         holder.id_kat_ikan.setText(daganganItem.getId_jenis_ikan());
         holder.ikan.setText(daganganItem.getNama_ikan());
@@ -76,6 +86,7 @@ public class DaganganAdapter extends RecyclerView.Adapter<DaganganAdapter.MyView
         holder.petani.setText(daganganItem.getNama_penjual());
         holder.harga.setText("Rp. "+daganganItem.getHarga_per_kg()+"/Kg");
         final int harga_per_kg = Integer.valueOf(daganganItem.getHarga_per_kg());
+        holder.tgl_wkt.setText(daganganItem.getTanggal_waktu());
         // loading item cover using Picasso library
         Picasso.with(mContext).load(daganganItem.getLink_foto()).into(holder.thumbnail);
 
@@ -98,10 +109,6 @@ public class DaganganAdapter extends RecyclerView.Adapter<DaganganAdapter.MyView
                 );
             }
         });
-
-        if(Integer.valueOf(daganganItem.getBerat_tersedia()) == 0){
-            itemList.remove(position); //sembunyi yang ketersediaannya sudh habis
-        }
 
     }
 

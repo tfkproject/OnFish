@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +29,7 @@ import java.util.Map;
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 
 public class LoginPenjualActivity extends AppCompatActivity {
 
@@ -45,7 +44,7 @@ public class LoginPenjualActivity extends AppCompatActivity {
     public String SERVER = Config.URL+"login_penjual.php";
     private static final String TAG = LoginPenjualActivity.class.getSimpleName();
 
-    SessionManager session;
+    SessionManagerUser session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class LoginPenjualActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Login Penjual");
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);

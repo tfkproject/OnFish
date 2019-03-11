@@ -7,6 +7,7 @@ public class Invoice {
     private String total_bayar;
     private String waktu;
     private String jenis;
+    private String status;
 
     public String getId_transaksi() {
         return id_transaksi;
@@ -54,5 +55,13 @@ public class Invoice {
 
     public void setJenis(String jenis) {
         this.jenis = jenis;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

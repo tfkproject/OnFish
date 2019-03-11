@@ -27,7 +27,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 
 import ta.pratiwi.onfish.R;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.fragments.HomeFragment;
 import ta.pratiwi.onfish.fragments.PembayaranFragment;
 import ta.pratiwi.onfish.fragments.SekitaranFragment;
@@ -35,7 +35,7 @@ import ta.pratiwi.onfish.fragments.SekitaranFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    SessionManager session;
+    SessionManagerUser session;
 
     boolean log_in;
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         ImageView plg = (ImageView)header.findViewById(R.id.imageView);
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
         session.checkLogin();
 
         //set fragmentnya
@@ -97,12 +97,12 @@ public class MainActivity extends AppCompatActivity
             log_in = true;
             //ambil data user
             HashMap<String, String> user = session.getUserDetails();
-            String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
-            final String nm_pelanggan = user.get(SessionManager.KEY_NM_PELANGGAN);
-            String email_pelanggan = user.get(SessionManager.KEY_MAIL_PELANGGAN);
-            String nohp_pelanggan = user.get(SessionManager.KEY_NOHP_PELANGGAN);
-            String alamat_pelanggan = user.get(SessionManager.KEY_ALAMAT_PELANGGAN);
-            String jenis_login = user.get(SessionManager.KEY_JENIS_LOGIN);
+            String id_pelanggan = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
+            final String nm_pelanggan = user.get(SessionManagerUser.KEY_NM_PELANGGAN);
+            String email_pelanggan = user.get(SessionManagerUser.KEY_MAIL_PELANGGAN);
+            String nohp_pelanggan = user.get(SessionManagerUser.KEY_NOHP_PELANGGAN);
+            String alamat_pelanggan = user.get(SessionManagerUser.KEY_ALAMAT_PELANGGAN);
+            String jenis_login = user.get(SessionManagerUser.KEY_JENIS_LOGIN);
 
             if(jenis_login.equals("penjual")){
                 finish();

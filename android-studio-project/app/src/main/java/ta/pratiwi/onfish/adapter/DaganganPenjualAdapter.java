@@ -59,6 +59,7 @@ public class DaganganPenjualAdapter extends RecyclerView.Adapter<DaganganPenjual
         holder.txtNama.setText(items.get(position).getNama_ikan());
         holder.txtBerat.setText("Tersedia: "+items.get(position).getBerat_tersedia()+" Kg");
         holder.txtHarga.setText("Rp. "+items.get(position).getHarga_per_kg());
+        holder.tgl_wkt.setText(items.get(position).getTanggal_waktu());
     }
 
     @Override
@@ -70,7 +71,7 @@ public class DaganganPenjualAdapter extends RecyclerView.Adapter<DaganganPenjual
 
         CardView cardView;
         ImageView fotoProduk;
-        TextView txtNama, txtBerat, txtHarga;
+        TextView txtNama, txtBerat, txtHarga, tgl_wkt;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -80,6 +81,7 @@ public class DaganganPenjualAdapter extends RecyclerView.Adapter<DaganganPenjual
             txtNama = (TextView) itemView.findViewById(R.id.nama_produk);
             txtBerat = (TextView) itemView.findViewById(R.id.txt_berat);
             txtHarga = (TextView) itemView.findViewById(R.id.txt_harga);
+            tgl_wkt = (TextView) itemView.findViewById(R.id.tanggal_waktu);
         }
     }
 

@@ -47,11 +47,11 @@ import java.util.Map;
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 
 public class KonfirmasiBayarActivity extends AppCompatActivity {
 
-    SessionManager session;
+    SessionManagerUser session;
     private ProgressDialog pDialog;
     public String SERVER = Config.URL+"konfirmasi_bayar.php";
     private static final String TAG = KonfirmasiBayarActivity.class.getSimpleName();
@@ -98,11 +98,11 @@ public class KonfirmasiBayarActivity extends AppCompatActivity {
 
 
         ///
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
         session.checkLogin();
         ///
         HashMap<String, String> user = session.getUserDetails();
-        final String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
+        final String id_pelanggan = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
 
         btnKonfirmasi.setOnClickListener(new View.OnClickListener() {
             @Override

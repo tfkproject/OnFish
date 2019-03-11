@@ -23,14 +23,14 @@ import java.util.Map;
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 
 public class RegistrasiActivity extends AppCompatActivity {
 
     TextView txtNama, txtEmail, txtPassword, txtNomor_hp,txtAlamat;
     Button btnReg;
     private ProgressDialog pDialog;
-    SessionManager session;
+    SessionManagerUser session;
 
     public String SERVER_POST = Config.URL+"reg_pelangan.php";
 
@@ -44,7 +44,7 @@ public class RegistrasiActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Registrasi");
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
 
         txtNama = (TextView) findViewById(R.id.nama);
         txtEmail = (TextView) findViewById(R.id.email);

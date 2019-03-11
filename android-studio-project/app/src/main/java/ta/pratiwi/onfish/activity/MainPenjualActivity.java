@@ -35,7 +35,7 @@ import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.adapter.DaganganPenjualAdapter;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.model.Dagangan;
 
 public class MainPenjualActivity extends AppCompatActivity {
@@ -49,7 +49,7 @@ public class MainPenjualActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private DaganganPenjualAdapter adapter;
     private List<Dagangan> items;
-    private SessionManager session;
+    private SessionManagerUser session;
 
     boolean log_in;
 
@@ -67,7 +67,7 @@ public class MainPenjualActivity extends AppCompatActivity {
             checkPermission();
         }
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
         session.checkLogin();
 
         //kalau belum login
@@ -80,11 +80,11 @@ public class MainPenjualActivity extends AppCompatActivity {
             log_in = true;
             //ambil data user
             HashMap<String, String> user = session.getUserDetails(); //bukan pelanggan, tapi user sbnarnya ni
-            final String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
-            String nm_pelanggan = user.get(SessionManager.KEY_NM_PELANGGAN);
-            String email_pelanggan = user.get(SessionManager.KEY_MAIL_PELANGGAN);
-            String nohp_pelanggan = user.get(SessionManager.KEY_NOHP_PELANGGAN);
-            String alamat_pelanggan = user.get(SessionManager.KEY_ALAMAT_PELANGGAN);
+            final String id_pelanggan = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
+            String nm_pelanggan = user.get(SessionManagerUser.KEY_NM_PELANGGAN);
+            String email_pelanggan = user.get(SessionManagerUser.KEY_MAIL_PELANGGAN);
+            String nohp_pelanggan = user.get(SessionManagerUser.KEY_NOHP_PELANGGAN);
+            String alamat_pelanggan = user.get(SessionManagerUser.KEY_ALAMAT_PELANGGAN);
 
             txtNotif = (TextView) findViewById(R.id.txt_notif);
 
@@ -190,6 +190,7 @@ public class MainPenjualActivity extends AppCompatActivity {
                             String foto = c.getString("foto");
                             String deskripsi = c.getString("deskripsi");
                             String no_hp = c.getString("no_hp");
+                            String tanggal_waktu = c.getString("tanggal_waktu");
 
                             Dagangan p = new Dagangan();
                             p.setId_dagangan(id_dagangan);
@@ -202,6 +203,7 @@ public class MainPenjualActivity extends AppCompatActivity {
                             p.setLink_foto(foto);
                             p.setDeskripsi(deskripsi);
                             p.setNohp(no_hp);
+                            p.setTanggal_waktu(tanggal_waktu);
 
                             items.add(p);
 
@@ -265,6 +267,13 @@ public class MainPenjualActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if (id == R.id.action_orderan) {
+            //session.logoutUser();
+            Intent intent = new Intent(MainPenjualActivity.this, MainOrderanPenjualActivity.class);
+            startActivity(intent);
+            return true;
+        }
 
         if (id == R.id.action_logout) {
             session.logoutUser();
@@ -350,7 +359,7 @@ public class MainPenjualActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         HashMap<String, String> user = session.getUserDetails(); //bukan pelanggan, tapi user sbnarnya ni
-        String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
+        String id_pelanggan = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
 
         items.clear();
         new getProduk(id_pelanggan).execute();

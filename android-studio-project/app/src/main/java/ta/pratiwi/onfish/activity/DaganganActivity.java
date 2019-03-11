@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -41,7 +42,7 @@ import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.adapter.DaganganAdapter;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.model.Dagangan;
 
 public class DaganganActivity extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class DaganganActivity extends AppCompatActivity {
     public String SERVER_POST = Config.URL+"tambah_ke_keranjang.php";
     public String SERVER_POST_SET = Config.URL+"set_ketersediaan.php";
 
-    SessionManager session;
+    SessionManagerUser session;
 
     private static final String TAG = DaganganActivity.class.getSimpleName();
 
@@ -72,7 +73,7 @@ public class DaganganActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dagangan);
 
         ///
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
         session.checkLogin();
         ///
 
@@ -103,7 +104,7 @@ public class DaganganActivity extends AppCompatActivity {
                 else{
                     HashMap<String, String> user = session.getUserDetails();
                     //input data ke keranjang
-                    String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
+                    String id_pelanggan = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
                     String id_dgn = id_dagangan.getText().toString();
 
                     //munculkan dialog box, mau beli berapa Kg
@@ -451,10 +452,24 @@ public class DaganganActivity extends AppCompatActivity {
     }
 
     public void openWhatsappContact(String number) {
-        Uri uri = Uri.parse("smsto:" + number);
-        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
-        i.setPackage("com.whatsapp");
-        startActivity(i);
+//        Uri uri = Uri.parse("smsto:" + number);
+//        Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+//        i.setPackage("com.whatsapp");
+//        startActivity(i);
+
+        PackageManager packageManager = getApplicationContext().getPackageManager();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+
+        try {
+            String url = "https://api.whatsapp.com/send?phone="+ number +"&text=" + URLEncoder.encode("Permisi, saya mau menanyakan tentang dagangannya..", "UTF-8");
+            i.setPackage("com.whatsapp");
+            i.setData(Uri.parse(url));
+            if (i.resolveActivity(packageManager) != null) {
+                getApplicationContext().startActivity(i);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /////////
@@ -515,6 +530,7 @@ public class DaganganActivity extends AppCompatActivity {
                             String no_hp = c.getString("no_hp");
                             String lat = c.getString("lat");
                             String lon = c.getString("lon");
+                            String tanggal_waktu = c.getString("tanggal_waktu");
 
                             Dagangan p = new Dagangan();
                             p.setId_dagangan(id_dagangan);
@@ -529,6 +545,7 @@ public class DaganganActivity extends AppCompatActivity {
                             p.setNohp(no_hp);
                             p.setLat(lat);
                             p.setLon(lon);
+                            p.setTanggal_waktu(tanggal_waktu);
 
                             itemList.add(p);
 

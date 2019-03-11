@@ -209,45 +209,45 @@ public class DirectionMap extends AppCompatActivity implements OnMapReadyCallbac
             currLocationMarker.remove();
         }
 
-        lastLocation = location;
-
-        //ambil lokasi tengah (center map)
-        String lokasi_lat = getIntent().getStringExtra("key_lat_tujuan");
-        String lokasi_long = getIntent().getStringExtra("key_long_tujuan");
-
-        double lat1, lon1, lat2, lon2;
-        lat1 = Double.valueOf(lokasi_lat);
-        lon1 = Double.valueOf(lokasi_long);
-
-        lat2 = location.getLatitude();
-        lon2 = location.getLongitude();
-
-        lokasi_asal = new LatLng(lat2, lon2);
-
-        double dLon = Math.toRadians(lon2 - lon1);
-
-        //convert to radians
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
-        lon1 = Math.toRadians(lon1);
-
-        double Bx = Math.cos(lat2) * Math.cos(dLon);
-        double By = Math.cos(lat2) * Math.sin(dLon);
-        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
-        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
-
-        LatLng lokasi_asal_tengah = new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
-
-
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(lokasi_asal_tengah));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-
-        //build_retrofit_and_get_response_nearby("restaurant");
-        build_retrofit_and_get_response_jarak("driving");
-
-        //stop location updates
-        stopLocationUpdates();
+//        lastLocation = location;
+//
+//        //ambil lokasi tengah (center map)
+//        String lokasi_lat = getIntent().getStringExtra("key_lat_tujuan");
+//        String lokasi_long = getIntent().getStringExtra("key_long_tujuan");
+//
+//        double lat1, lon1, lat2, lon2;
+//        lat1 = Double.valueOf(lokasi_lat);
+//        lon1 = Double.valueOf(lokasi_long);
+//
+//        lat2 = location.getLatitude();
+//        lon2 = location.getLongitude();
+//
+//        lokasi_asal = new LatLng(lat2, lon2);
+//
+//        double dLon = Math.toRadians(lon2 - lon1);
+//
+//        //convert to radians
+//        lat1 = Math.toRadians(lat1);
+//        lat2 = Math.toRadians(lat2);
+//        lon1 = Math.toRadians(lon1);
+//
+//        double Bx = Math.cos(lat2) * Math.cos(dLon);
+//        double By = Math.cos(lat2) * Math.sin(dLon);
+//        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+//        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+//
+//        LatLng lokasi_asal_tengah = new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
+//
+//
+//        //move map camera
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(lokasi_asal_tengah));
+//        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+//
+//        //build_retrofit_and_get_response_nearby("restaurant");
+//        build_retrofit_and_get_response_jarak("driving");
+//
+//        //stop location updates
+//        stopLocationUpdates();
     }
 
     private void stopLocationUpdates() {

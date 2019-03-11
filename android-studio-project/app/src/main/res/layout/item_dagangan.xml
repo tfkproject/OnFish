@@ -101,18 +101,37 @@
             </LinearLayout>
 
 
-            <ImageButton
-                android:id="@+id/overflow"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/thumbnail"
-                android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:scaleType="centerCrop"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_beli"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/overflow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/thumbnail"
+                    android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_beli"/>
+
+                <TextView
+                    android:id="@+id/tanggal_waktu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/songs_count"
+                    android:text="[tanggal_waktu]"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="7dp"/>
+
+            </LinearLayout>
+
+
 
             <!--
             <Button

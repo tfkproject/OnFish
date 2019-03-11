@@ -31,7 +31,7 @@ import java.util.Map;
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     public String SERVER = Config.URL+"login_pelanggan.php";
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    SessionManager session;
+    SessionManagerUser session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Login");
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);

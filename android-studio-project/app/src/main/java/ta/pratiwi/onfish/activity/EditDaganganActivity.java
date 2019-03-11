@@ -51,7 +51,7 @@ import java.util.Map;
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.model.JenisIkan;
 
 public class EditDaganganActivity extends AppCompatActivity {
@@ -68,7 +68,7 @@ public class EditDaganganActivity extends AppCompatActivity {
     public String SERVER_POST = Config.URL+"dagangan_update.php";
     public String id_jenis_ikan, timestamp;
 
-    SessionManager session;
+    SessionManagerUser session;
 
     private static final String TAG = EditDaganganActivity.class.getSimpleName();
 
@@ -83,10 +83,10 @@ public class EditDaganganActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_dagangan);
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
 
         HashMap<String, String> user = session.getUserDetails();
-        final String id_penjual = user.get(SessionManager.KEY_ID_PELANGGAN);
+        final String id_penjual = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
 
         final String id_dagangan = getIntent().getStringExtra("key_id_dagangan");
         final String id_jenis_ikan = getIntent().getStringExtra("key_id_jenis_ikan");

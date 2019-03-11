@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-public class SessionManager {
+public class SessionManagerUser {
     // Shared Preferences
     SharedPreferences pref;
 
@@ -20,7 +20,7 @@ public class SessionManager {
     int PRIVATE_MODE = 0;
 
     // Sharedpref file name
-    private static final String PREF_NAME = "GenKanPref";
+    private static final String PREF_NAME = "GenKanPrefUser";
 
     // All Shared Preferences Keys
     private static final String IS_LOGIN = "IsLoggedIn";
@@ -33,7 +33,7 @@ public class SessionManager {
     public static final String KEY_JENIS_LOGIN = "key_jenis_login";
 
     // Constructor
-    public SessionManager(Context context) {
+    public SessionManagerUser(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();

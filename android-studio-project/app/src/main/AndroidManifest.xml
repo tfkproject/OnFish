@@ -32,6 +32,7 @@
         <activity android:name="ta.pratiwi.onfish.activity.LoginActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.LoginPenjualActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.MainPenjualActivity" />
+        <activity android:name="ta.pratiwi.onfish.activity.MainOrderanPenjualActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.BayarActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.KonfirmasiBayarActivity" />
         <activity android:name="ta.pratiwi.onfish.activity.RegistrasiActivity" />

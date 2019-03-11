@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,7 +49,7 @@ import java.util.Map;
 import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.model.JenisIkan;
 
 public class TambahDaganganActivity extends AppCompatActivity {
@@ -67,7 +66,7 @@ public class TambahDaganganActivity extends AppCompatActivity {
     public String SERVER_POST = Config.URL+"dagangan_tambah.php";
     public String id_jenis_ikan, timestamp;
 
-    SessionManager session;
+    SessionManagerUser session;
 
     private static final String TAG = TambahDaganganActivity.class.getSimpleName();
 
@@ -82,10 +81,10 @@ public class TambahDaganganActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tambah_dagangan);
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
 
         HashMap<String, String> user = session.getUserDetails();
-        final String id_penjual = user.get(SessionManager.KEY_ID_PELANGGAN);
+        final String id_penjual = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
 
         getSupportActionBar().setTitle("Tambah Dagangan");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

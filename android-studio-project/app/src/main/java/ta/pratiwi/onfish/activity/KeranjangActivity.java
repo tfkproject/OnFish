@@ -30,7 +30,7 @@ import ta.pratiwi.onfish.R;
 import ta.pratiwi.onfish.adapter.KeranjangAdapter;
 import ta.pratiwi.onfish.app.Config;
 import ta.pratiwi.onfish.app.Request;
-import ta.pratiwi.onfish.app.SessionManager;
+import ta.pratiwi.onfish.app.SessionManagerUser;
 import ta.pratiwi.onfish.model.Keranjang;
 
 public class KeranjangActivity extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class KeranjangActivity extends AppCompatActivity {
     public String SERVER_SUM = Config.URL+"sum_keranjang.php";
     public String SERVER_POST_SET = Config.URL+"set_ketersediaan.php";
 
-    SessionManager session;
+    SessionManagerUser session;
 
     private static final String TAG = KeranjangActivity.class.getSimpleName();
 
@@ -59,7 +59,7 @@ public class KeranjangActivity extends AppCompatActivity {
         setContentView(R.layout.activity_keranjang);
 
         ///
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManagerUser(getApplicationContext());
         session.checkLogin();
         //kalau belum login
         if(!session.isLoggedIn()){
@@ -96,8 +96,8 @@ public class KeranjangActivity extends AppCompatActivity {
 
         HashMap<String, String> user = session.getUserDetails();
         //input data ke keranjang
-        String id_pelanggan = user.get(SessionManager.KEY_ID_PELANGGAN);
-        String nama_pelanggan = user.get(SessionManager.KEY_NM_PELANGGAN);
+        String id_pelanggan = user.get(SessionManagerUser.KEY_ID_PELANGGAN);
+        String nama_pelanggan = user.get(SessionManagerUser.KEY_NM_PELANGGAN);
 
         getSupportActionBar().setTitle("Kerajang");
         getSupportActionBar().setSubtitle(nama_pelanggan);
